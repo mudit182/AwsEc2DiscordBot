@@ -1,8 +1,16 @@
-import discord, boto3, config
+import os
+import discord
+import boto3
+import dotenv
+
+dotenv.load_dotenv()
+
+instance_id = os.environ['INSTANCE_ID']
+discord_token = os.environ['DISCORD_BOT_TOKEN']
 
 client = discord.Client()
 ec2 = boto3.resource('ec2')
-instance = ec2.Instance(config.instance_id)
+instance = ec2.Instance(instance_id)
 
 @client.event
 async def on_ready():
@@ -11,9 +19,11 @@ async def on_ready():
     print(client.user.id)
     print('------------')
 
-
 @client.event
 async def on_message(message):
+    if message.author == client.user:
+        return
+
     if message.content.lower() == "stop":
         if turnOffInstance():
             await message.channel.send('AWS Instance stopping')
@@ -32,21 +42,30 @@ async def on_message(message):
             await message.channel.send('AWS Instance rebooting')
         else:
             await message.channel.send('Error rebooting AWS Instance')
-    elif message.content.lower() == "test":
-        await message.channel.send('Thanks, Jace. Helps alot.')
+    elif message.content.lower() == "info":
+        await message.channel.send(
+'''
+start - Starts EC2
+stop - Stops EC2
+state - Returns EC2 current state
+reboot - Reboots EC2
+'''
+        )
+    else:
+        await message.channel.send("Enter 'info' to see all available options.")
 
 def turnOffInstance():
     try:
         instance.stop()
         return True
-    except:
+    except Exception as _:
         return False
 
 def turnOnInstance():
     try:
         instance.start()
         return True
-    except:
+    except Exception as _:
         return False
 
 def getInstanceState():
@@ -56,7 +75,7 @@ def rebootInstance():
     try:
         instance.reboot()
         return True
-    except:
+    except Exception as _:
         return False
 
-client.run(config.discord_key)
+client.run(discord_token)

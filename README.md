@@ -1,10 +1,10 @@
 # AWS EC2 Controller Discord Bot
-This is still a large WIP, currently being used to turn a Feed the Beast server on and off from Discord. End goal is to have a larger amount of commands, easier integration with your own AWS account and not having just one hard coded instance.
+This is a fork from https://github.com/leobeosab/AwsEc2DiscordBot
 
 ## Tools Used
 * Python 3 and pip3 : ```install python3 
 install python3-pip```
-* AWS CLI :
+* AWS CLI : 
 * AWS BOTO library : ``` pip3 install boto3 ```
 * Discord Bot library : ``` pip3 install discord ```
 
