@@ -24,25 +24,28 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content.lower() == "stop":
-        if turnOffInstance():
-            await message.channel.send('AWS Instance stopping')
-        else:
-            await message.channel.send('Error stopping AWS Instance')
-    elif message.content.lower() == "start":
+    if message.content.lower() == "start":
         if turnOnInstance():
             await message.channel.send('AWS Instance starting')
         else:
             await message.channel.send('Error starting AWS Instance')
-    elif message.content.lower() == "state":
-        if getInstanceState():
-            await message.channel.send('AWS Instance state is: ' + getInstanceState())
+    elif message.content.lower() == "stop":
+        if turnOffInstance():
+            await message.channel.send('AWS Instance stopping')
+        else:
+            await message.channel.send('Error stopping AWS Instance')
     elif message.content.lower() == "reboot":
         if rebootInstance():
             await message.channel.send('AWS Instance rebooting')
         else:
             await message.channel.send('Error rebooting AWS Instance')
-    elif message.content.lower() == "info":
+    elif message.content.lower() == "state":
+        if getInstanceState():
+            await message.channel.send('AWS Instance state is: ' + getInstanceState())
+    elif message.content.lower() == "ip":
+        if getInstancePublicIP():
+            await message.channel.send(getInstancePublicIP())
+    elif message.content.lower() == "options":
         await message.channel.send(
 '''
 start - Starts EC2
@@ -52,7 +55,7 @@ reboot - Reboots EC2
 '''
         )
     else:
-        await message.channel.send("Enter 'info' to see all available options.")
+        await message.channel.send("Send 'options' to see all available options.")
 
 def turnOffInstance():
     try:
@@ -70,6 +73,9 @@ def turnOnInstance():
 
 def getInstanceState():
         return instance.state['Name']
+
+def getInstancePublicIP():
+    return instance.public_ip_address
 
 def rebootInstance():
     try:
