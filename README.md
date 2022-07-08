@@ -15,10 +15,17 @@ install python3-pip```
     *You will need to add an IAM User in AWS Console with permissions to access your EC2.
 3. Go to Discord's developer site and setup a bot [here](https://discordapp.com/developers)
 4. Clone this repo into the home location for your user.
-5. Create a file named .config and enter the variables for your Discord token and your AWS instance ID. Doing this will help protect your secrets.
+5. Create a file named .env and enter the variables for your Discord token and your AWS instance ID. Doing this will help protect your secrets.
 ```instance_id='INSERTID discord_key='INSERTKEY'```
 6. Make your file executable ```chmod +x bot.py```
 7. Now run your bot! python3 bot.py
+
+#### All Environment variables
+INSTANCE_ID=
+DISCORD_BOT_TOKEN=
+DUCKDNS_TOKEN=
+DUCKDNS_DOMAIN=
+TRAEFIK_REBOOT_SCRIPT_PATH=
 
 To use systemd to schedule your bot to run enter this in the command line. 
 ```[Unit]
