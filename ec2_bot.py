@@ -1,4 +1,5 @@
 import os
+
 import discord
 import boto3
 import dotenv
@@ -24,37 +25,37 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content.lower() == "start":
+    if message.content.lower() == "ec2 start":
         if turnOnInstance():
             await message.channel.send('AWS Instance starting')
         else:
             await message.channel.send('Error starting AWS Instance')
-    elif message.content.lower() == "stop":
+    elif message.content.lower() == "ec2 stop":
         if turnOffInstance():
             await message.channel.send('AWS Instance stopping')
         else:
             await message.channel.send('Error stopping AWS Instance')
-    elif message.content.lower() == "reboot":
+    elif message.content.lower() == "ec2 reboot":
         if rebootInstance():
             await message.channel.send('AWS Instance rebooting')
         else:
             await message.channel.send('Error rebooting AWS Instance')
-    elif message.content.lower() == "state":
+    elif message.content.lower() == "ec2 state":
         if getInstanceState():
             await message.channel.send('AWS Instance state is: ' + getInstanceState())
-    elif message.content.lower() == "ip":
+    elif message.content.lower() == "ec2 ip":
         if getInstancePublicIP():
             await message.channel.send(getInstancePublicIP())
-    elif message.content.lower() == "options":
+    elif message.content.lower() == "options" or message.content.lower() == "ec2 options":
         await message.channel.send(
 '''
-start - Starts EC2
-stop - Stops EC2
-state - Returns EC2 current state
-reboot - Reboots EC2
+ec2 start - Starts EC2
+ec2 stop - Stops EC2
+ec2 state - Returns EC2 current state
+ec2 reboot - Reboots EC2
 '''
         )
-    else:
+    elif message.content.lower().startswith('ec2'):
         await message.channel.send("Send 'options' to see all available options.")
 
 def turnOffInstance():
