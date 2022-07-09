@@ -65,7 +65,7 @@ def getInstancePublicIP():
 
 def rebootTraefik():
     try:
-        process = subprocess.Popen(f"sudo {traefik_reboot_script_path}", shell=True, stdout=subprocess.PIPE, cwd=traefik_dir)
+        process = subprocess.Popen(f"{traefik_reboot_script_path}", shell=True, stdout=subprocess.PIPE, cwd=traefik_dir)
         process.wait()
         if process.returncode == 0:
             return True
