@@ -13,6 +13,7 @@ discord_token = os.environ['DISCORD_BOT_TOKEN']
 duckdns_token = os.environ['DUCKDNS_TOKEN']
 duckdns_domain = os.environ['DUCKDNS_DOMAIN']
 traefik_reboot_script_path = os.environ['TRAEFIK_REBOOT_SCRIPT_PATH']
+traefik_dir = os.environ['TRAEFIK_DIR']
 
 client = discord.Client()
 ec2 = boto3.resource('ec2')
@@ -64,7 +65,7 @@ def getInstancePublicIP():
 
 def rebootTraefik():
     try:
-        process = subprocess.Popen(traefik_reboot_script_path, shell=True, stdout=subprocess.PIPE)
+        process = subprocess.Popen(f"sudo {traefik_reboot_script_path}", shell=True, stdout=subprocess.PIPE, cwd=traefik_dir)
         process.wait()
         if process.returncode == 0:
             return True
@@ -72,5 +73,8 @@ def rebootTraefik():
             return False
     except Exception as _:
         return False
+
+# Update duckdns on start
+updateDuckdns()
 
 client.run(discord_token)
