@@ -13,6 +13,7 @@ discord_token = os.environ['DISCORD_BOT_TOKEN']
 duckdns_token = os.environ['DUCKDNS_TOKEN']
 duckdns_domain = os.environ['DUCKDNS_DOMAIN']
 traefik_reboot_script_path = os.environ['TRAEFIK_REBOOT_SCRIPT_PATH']
+traefik_hard_reboot_script_path = os.environ['TRAEFIK_HARD_REBOOT_SCRIPT_PATH']
 traefik_dir = os.environ['TRAEFIK_DIR']
 
 client = discord.Client()
@@ -38,14 +39,20 @@ async def on_message(message):
             await message.channel.send('Error updating duckdns')
     elif message.content.lower() == "traefik reboot":
         if rebootTraefik():
-            await message.channel.send('Rebooting traefik docker service')
+            await message.channel.send('Traefik docker service rebooted')
         else:
             await message.channel.send('Error rebooting traefik docker service')
+    elif message.content.lower() == "traefik hard reboot":
+        if hardRebootTraefik():
+            await message.channel.send('Traefik docker service hard rebooted')
+        else:
+            await message.channel.send('Error hard rebooting traefik docker service')
     elif message.content.lower() == "options":
         await message.channel.send(
 '''
 duckdns update - Updates DuckDNS domain to track ip address of EC2 Main
-traefik reboot - Reboots Traefik, in case a traefik connected service (usually backend) is not accessible
+traefik reboot - Reboots Traefik docker service
+traefik hard reboot - Reboots Traefik docker service after deleting all volumes - thus deleting all existing certificates
 '''
         )
     # else:
@@ -73,6 +80,18 @@ def rebootTraefik():
             return False
     except Exception as _:
         return False
+
+def hardRebootTraefik():
+    try:
+        process = subprocess.Popen(f"{traefik_hard_reboot_script_path}", shell=True, stdout=subprocess.PIPE, cwd=traefik_dir)
+        process.wait()
+        if process.returncode == 0:
+            return True
+        else:
+            return False
+    except Exception as _:
+        return False
+
 
 # Update duckdns on start
 updateDuckdns()
