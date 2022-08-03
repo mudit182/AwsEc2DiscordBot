@@ -115,8 +115,8 @@ def updateGithub():
     app_installation_id = response.json()[0]["id"]
     # Get Github app access token - to be used to access Github API and set secret
     response = requests.post(
-    f"https://api.github.com/app/installations/{installation_id}/access_tokens",
-    headers=headers_with_jwt
+        f"https://api.github.com/app/installations/{app_installation_id}/access_tokens",
+        headers=headers_with_jwt
     )
     access_token = response.json()["token"]
 
