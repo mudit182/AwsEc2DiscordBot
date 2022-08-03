@@ -2,3 +2,5 @@ boto3
 discord
 python-dotenv
 requests
+pyjwt[crypto]
+pynacl

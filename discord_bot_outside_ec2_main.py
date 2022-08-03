@@ -1,3 +1,5 @@
+# This python program is supposed to run outside EC2 main server
+# controlling start, stopping the server
 import os
 
 import discord
